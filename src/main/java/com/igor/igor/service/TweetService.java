@@ -18,5 +18,8 @@ public interface TweetService {
     Page<Tweet> findAll(Pageable pageable);
    
 
+	String deleteTask(String id);
+
+	Tweet findById(String id);
 
 }

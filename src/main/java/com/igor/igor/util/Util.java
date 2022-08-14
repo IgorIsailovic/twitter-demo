@@ -2,30 +2,36 @@ package com.igor.igor.util;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.data.domain.Pageable;
 
 
 public class Util {
 	
-	public URL urlFormater(HttpServletRequest request) {
+	private StringBuilder next= new StringBuilder();
 
+	public URL urlFormater(HttpServletRequest request, Pageable paging, List<String> hashTag) {
 		 URL url=null;
-		 String limit="";
-		 int off=0;
-		 String offset="";
-		 String urlBase = request.getRequestURL().toString()+"?";
+		 next.append(request.getRequestURL().toString()); //popravi
+		 next.append("?");
 		 if(request.getParameter("limit")!=null) {
-			 limit = "limit="+request.getParameter("limit")+"&";
+			  next.append("limit="+request.getParameter("limit")+"&");
 		 }
 		 if(request.getParameter("offset")!=null) {		  
-		 off = Integer.parseInt(request.getParameter("offset"))+1;
-		 offset =  "offset=" + off;
+		 next.append("offset="+paging.next().getPageNumber());
 		 }
-		
-		 
+		 if(hashTag!=null) {
+		 for(String h : hashTag) {
+			 next.append("&hashTag=%23");
+			 next.append(h.substring(1));
+			 
+		 }
+		 }
 			try {
-				url = new URL(urlBase + limit + offset);
+				url = new URL(next.toString());
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}

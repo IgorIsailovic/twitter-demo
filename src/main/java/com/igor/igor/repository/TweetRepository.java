@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.igor.igor.models.Tweet;
 
-public interface TweetRepository extends JpaRepository<Tweet, Long> {
+public interface TweetRepository extends JpaRepository<Tweet, String> {
 	Page<Tweet> findAll(Pageable pageable);
 
 }

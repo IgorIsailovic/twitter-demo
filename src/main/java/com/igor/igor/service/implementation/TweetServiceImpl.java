@@ -33,4 +33,16 @@ public class TweetServiceImpl implements TweetService {
 		return tweetRepo.findAll(pageable);
 	}
 
+	@Override
+	public String deleteTask(String id) {
+		tweetRepo.deleteById(id);
+		return id;
+	}
+
+	@Override
+	public Tweet findById(String id) {
+		Tweet tweet = tweetRepo.findById(id).get();
+		return tweet;
+	}
+
 }
