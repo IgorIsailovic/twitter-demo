@@ -19,8 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.igor.igor.error.ErrorResponse;
 import com.igor.igor.models.Tweet;
 import com.igor.igor.service.implementation.TweetServiceImpl;
 import com.igor.igor.util.TweetsPageResponse;
@@ -83,38 +83,30 @@ public class TweetController {
 	 
 	 
 	 @PostMapping
-	    public ResponseEntity<Tweet> createTweet(@Valid @RequestBody Tweet tweet, @RequestHeader(value="X-Username",  required = true) @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$", message = "X-username header must follow pattern: ^[a-zA-Z0-9_]{4,32}$") String username ) {
-		 try {
-			/* if(tweet.getHashtags().size()>5) {
-				 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			 }*/
-			 if(!username.isEmpty()) tweet.setCreatedBy(username);
+	    public ResponseEntity<?> createTweet(@Valid @RequestBody Tweet tweet, @RequestHeader(value="X-Username",  required = true) @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$", message = "X-username header must follow pattern: ^[a-zA-Z0-9_]{4,32}$") String username ) {
+			 tweet.setCreatedBy(username);
 			 tweetService.createTweet(tweet);
 	        return ResponseEntity.created(null).body(tweet);
-		 }
-		 catch (Exception e) {
-			 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);		}
-	    }
+	 }
+		
+			
+	    
 
 	 
 	 @DeleteMapping("/{id}")
-	 public ResponseEntity<String> deleteTweet(@PathVariable("id") String id, @RequestHeader(value="X-Username",  required = true) @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$", message = "X-username header must follow pattern: ^[a-zA-Z0-9_]{4,32}$") String username  ) {
-		 if(tweetService.findById(id).getCreatedBy()==username) {
-			 try{tweetService.deleteTask(id);
-			 return ResponseEntity.ok().body(id);
-			 }
-			 catch (Exception e) {
-					// TODO: handle exception
-			}
+	 public ResponseEntity<?> deleteTweet(@PathVariable("id") String id, @RequestHeader(value="X-Username",  required = true) @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$", message = "X-username header must follow pattern: ^[a-zA-Z0-9_]{4,32}$") String username  ) {
+		 try {tweetService.findById(id);}
+		 catch (Exception e) {
+			 return new ResponseEntity<>(new ErrorResponse(HttpStatus.NOT_FOUND.value(),1,"No tweet with id: " + id),HttpStatus.NOT_FOUND);
 		 }
-		 if (currentPrincipalName.equals(username)) {
-				return new ResponseEntity<>("Can't delete your self!",HttpStatus.BAD_REQUEST);//(HttpStatus.BAD_REQUEST, "Can't delete your self!");
-			}
-			if (userService.deleteUser(username).equals("OK"))
-				return new ResponseEntity<>(HttpStatus.ACCEPTED);
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	    }
-
+		 if(tweetService.findById(id).getCreatedBy().equals(username)) {
+			 tweetService.deleteTask(id);
+			 return ResponseEntity.ok().body(id);
+		 }
+		 else {
+		 return new ResponseEntity<>(new ErrorResponse(HttpStatus.FORBIDDEN.value(),1,"Only allowed to delete own tweets"), HttpStatus.FORBIDDEN);
+		 }
+	 }
 		 
 	 
 }

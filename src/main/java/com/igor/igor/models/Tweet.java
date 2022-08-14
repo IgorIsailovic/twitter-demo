@@ -13,10 +13,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.beans.factory.annotation.Required;
 
 
 
@@ -26,17 +31,16 @@ import org.hibernate.annotations.GenericGenerator;
 
 public class Tweet {
 	
-	UUID uuid = UUID.randomUUID();
-	
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
     @Column(name = "tweet_id",columnDefinition = "CHAR(32)")
     private String tweetId;
 
-    @Column(name = "tweet_body", columnDefinition = "text")
+    @NotNull(message="Tweet body must be specified!")
+    @Column(name = "tweet_body", columnDefinition = "text", nullable=false)
     @Size(max=320, message = "Tweet body must not be greater than 320 characters!")
-    private String tweetBody = uuid.toString();
+    private String tweetBody;
     
     
     @ElementCollection
@@ -45,6 +49,7 @@ public class Tweet {
     @Size(max=5, message = "Hashtag list must not be greater than 5!")
     private List<@Pattern(regexp = "^#[a-zA-Z]{2,16}$", message="Each Hash Tag must follow the following pattern ^#[a-zA-Z]{2,16}$ ") String> hashtags;
     
+   
     @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$")
     @Column(name = "created_by")
     private String createdBy;
@@ -101,7 +106,7 @@ public class Tweet {
 	}
 
 
-	public Tweet(String tweetId, String tweetBody, List<String> hashtags, String createdBy, String createdAt) {
+	public Tweet(String tweetId,  String tweetBody, List<String> hashtags, String createdBy, String createdAt) {
 		super();
 		this.tweetId = tweetId;
 		this.tweetBody = tweetBody;

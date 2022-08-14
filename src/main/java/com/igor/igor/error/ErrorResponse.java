@@ -31,6 +31,9 @@ public class ErrorResponse {
 		this.errorCode = errorCode;
 		this.message = message;
 	}
+	
+	public ErrorResponse() {
+	}
 	@Override
 	public String toString() {
 		return "ErrorResponse [httpCode=" + httpCode + ", errorCode=" + errorCode + ", message=" + message + "]";
