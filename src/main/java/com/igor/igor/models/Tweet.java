@@ -1,33 +1,29 @@
 package com.igor.igor.models;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.beans.factory.annotation.Required;
 
 
 
 
 @Entity
-@Table(name = "tweet")
+@Table(name = "tweets")
 
 public class Tweet {
 	
@@ -43,7 +39,7 @@ public class Tweet {
     private String tweetBody;
     
     
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER) 
     @CollectionTable(name = "hash_tags", joinColumns = @JoinColumn(name = "tweet_id"))
     @Column(name="hash_tags")
     @Size(max=5, message = "Hashtag list must not be greater than 5!")

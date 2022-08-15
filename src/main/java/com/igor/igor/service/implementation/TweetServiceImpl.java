@@ -45,4 +45,15 @@ public class TweetServiceImpl implements TweetService {
 		return tweet;
 	}
 
+	@Override
+	public Page<Tweet> findByHashtags(String hashtags, Pageable pageable) {
+		return tweetRepo.findByHashtags(hashtags, pageable);
+	}
+
+	@Override
+	public Page<Tweet> findByCreatedBy(String createdBy, Pageable pageable) {
+		return tweetRepo.findByCreatedBy(createdBy, pageable);
+	}
+
+
 }

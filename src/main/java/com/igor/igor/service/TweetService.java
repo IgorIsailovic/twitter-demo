@@ -22,4 +22,8 @@ public interface TweetService {
 
 	Tweet findById(String id);
 
+	Page<Tweet> findByHashtags(String hashtags, Pageable pageable);
+	
+	Page<Tweet> findByCreatedBy(String createdBy, Pageable pageable);
+
 }
