@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Index;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -23,9 +24,12 @@ import org.hibernate.annotations.GenericGenerator;
 
 
 @Entity
-@Table(name = "tweets")
-
-public class Tweet {
+@Table(name = "tweets", indexes = {
+		  @Index(name = "tweetIdIndex", columnList = "tweet_id"),
+		  @Index(name = "createdByIndex", columnList = "created_by"),
+		  
+		})
+public class TweetResp {
 	
 	@Id
 	@GeneratedValue(generator = "uuid")
@@ -40,7 +44,8 @@ public class Tweet {
     
     
     @ElementCollection(fetch = FetchType.EAGER) 
-    @CollectionTable(name = "hash_tags", joinColumns = @JoinColumn(name = "tweet_id"))
+    @CollectionTable(name = "hash_tags", joinColumns = @JoinColumn(name = "tweet_id"), indexes = {		  @Index(name = "hashTagIndex", columnList = "hash_tags"),
+})
     @Column(name="hash_tags")
     @Size(max=5, message = "Hashtag list must not be greater than 5!")
     private List<@Pattern(regexp = "^#[a-zA-Z]{2,16}$", message="Each Hash Tag must follow the following pattern ^#[a-zA-Z]{2,16}$ ") String> hashtags;
@@ -102,7 +107,7 @@ public class Tweet {
 	}
 
 
-	public Tweet(String tweetId,  String tweetBody, List<String> hashtags, String createdBy, String createdAt) {
+	public TweetResp(String tweetId,  String tweetBody, List<String> hashtags, String createdBy, String createdAt) {
 		super();
 		this.tweetId = tweetId;
 		this.tweetBody = tweetBody;
@@ -113,7 +118,7 @@ public class Tweet {
 	}
 
 	
-	public Tweet() {
+	public TweetResp() {
 	
 	}
 	@Override

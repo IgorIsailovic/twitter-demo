@@ -7,29 +7,29 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.igor.igor.models.Tweet;
-import com.igor.igor.repository.TweetRepository;
-import com.igor.igor.service.TweetService;
+import com.igor.igor.models.TweetResp;
+import com.igor.igor.repository.TweetRespRepository;
+import com.igor.igor.service.TweetRespService;
 
 @Service
-public class TweetServiceImpl implements TweetService {
+public class TweetRespServiceImpl implements TweetRespService {
 
 	@Autowired
-	TweetRepository tweetRepo;
+	TweetRespRepository tweetRepo;
 	
 	@Override
-	public List<Tweet> findAll() {
+	public List<TweetResp> findAll() {
 		return tweetRepo.findAll();
 	}
 
 	@Override
-	public void createTweet(Tweet tweet) {
+	public void createTweet(TweetResp tweet) {
 	    	tweetRepo.save(tweet);
 	
 	}
 
 	@Override
-	public Page<Tweet> findAll(Pageable pageable) {
+	public Page<TweetResp> findAll(Pageable pageable) {
 		return tweetRepo.findAll(pageable);
 	}
 
@@ -40,18 +40,18 @@ public class TweetServiceImpl implements TweetService {
 	}
 
 	@Override
-	public Tweet findById(String id) {
-		Tweet tweet = tweetRepo.findById(id).get();
+	public TweetResp findById(String id) {
+		TweetResp tweet = tweetRepo.findById(id).get();
 		return tweet;
 	}
 
 	@Override
-	public Page<Tweet> findByHashtags(String hashtags, Pageable pageable) {
+	public Page<TweetResp> findByHashtags(String hashtags, Pageable pageable) {
 		return tweetRepo.findByHashtags(hashtags, pageable);
 	}
 
 	@Override
-	public Page<Tweet> findByCreatedBy(String createdBy, Pageable pageable) {
+	public Page<TweetResp> findByCreatedBy(String createdBy, Pageable pageable) {
 		return tweetRepo.findByCreatedBy(createdBy, pageable);
 	}
 

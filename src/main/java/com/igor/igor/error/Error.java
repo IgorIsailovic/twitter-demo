@@ -1,7 +1,7 @@
 package com.igor.igor.error;
 
 
-public class ErrorResponse {
+public class Error {
 	
 	private int httpCode;
 	private int errorCode;
@@ -25,14 +25,14 @@ public class ErrorResponse {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public ErrorResponse(int httpCode, int errorCode, String message) {
+	public Error(int httpCode, int errorCode, String message) {
 		super();
 		this.httpCode = httpCode;
 		this.errorCode = errorCode;
 		this.message = message;
 	}
 	
-	public ErrorResponse() {
+	public Error() {
 	}
 	@Override
 	public String toString() {
