@@ -22,8 +22,11 @@ public interface TweetRespService {
 
 	TweetResp findById(String id);
 
-	Page<TweetResp> findByHashtags(String hashtags, Pageable pageable);
+	Page<TweetResp> findAllByHashtagsIn(List<String> hashtags, Pageable pageable);
 	
-	Page<TweetResp> findByCreatedBy(String createdBy, Pageable pageable);
+	Page<TweetResp> findAllByCreatedByIn(List<String> createdBy, Pageable pageable);
+	
+	Page<TweetResp> findByHashtagsInOrCreatedByIn(List<String> createdBy,List<String> hashtags, Pageable pageable);
+
 
 }

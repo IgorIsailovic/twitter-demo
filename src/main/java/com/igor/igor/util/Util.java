@@ -1,9 +1,7 @@
 package com.igor.igor.util;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +18,10 @@ public class Util {
 		 
 		 next.append(request.getRequestURL().toString()); //popravi
 	
+		 if(request.getParameter("limit")!=null) {
 		 next.append("?limit="+paging.getPageSize()+"&");
-		  
+		 }
+		 else next.append("?");
 		 next.append("offset="+paging.next().getPageNumber());
 		 
 		 if(hashTag!=null) {
@@ -34,7 +34,7 @@ public class Util {
 		 if(username!=null) {
 			 for(String u : username) {
 				 next.append("&username=");
-				 next.append(u.substring(1));
+				 next.append(u);
 				
 			 }
 			 }
