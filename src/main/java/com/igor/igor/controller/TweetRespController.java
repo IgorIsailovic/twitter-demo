@@ -1,6 +1,9 @@
 package com.igor.igor.controller;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -41,7 +44,6 @@ import io.swagger.v3.oas.annotations.Operation;
 @RequestMapping("/v1/tweets")
 public class TweetRespController {
 
-	
 	@Autowired
 	private TweetRespServiceImpl tweetService;
 
@@ -69,23 +71,18 @@ public class TweetRespController {
 
 		TweetsPageResp response = new TweetsPageResp();
 		Pageable paging = PageRequest.of(offset, limit, Sort.by("createdAt").descending());
-		Page<TweetResp> tweets; 
+		Page<TweetResp> tweets;
 		Util util = new Util();
 
-		
-		
 		if (username != null && hashTag != null) {
 			tweets = tweetService.findByHashtagsInOrCreatedByIn(hashTag, username, paging);
-		}
-		else if (hashTag != null) {
+		} else if (hashTag != null) {
 			tweets = tweetService.findAllByHashtagsIn(hashTag, paging);
-		}
-		else if (username != null ) {
+		} else if (username != null) {
 			tweets = tweetService.findAllByCreatedByIn(username, paging);
-		}
-		else tweets = tweetService.findAll(paging);
+		} else
+			tweets = tweetService.findAll(paging);
 
-		
 		if (tweets.isLast()) {
 			response = new TweetsPageResp(tweets.getContent());
 		} else {
@@ -111,5 +108,4 @@ public class TweetRespController {
 
 	}
 
-		
 }

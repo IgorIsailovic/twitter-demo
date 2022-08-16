@@ -37,6 +37,16 @@ public class PostTweetReq {
 		public PostTweetReq() {
 			
 		}
+
+		public PostTweetReq(
+				@NotNull(message = "Tweet body must be specified!") @Size(max = 320, message = "Tweet body must not be greater than 320 characters!") String tweetBody,
+				@Size(max = 5, message = "Hashtag list must not be greater than 5!") List<@Pattern(regexp = "^#[a-zA-Z]{2,16}$", message = "Each Hash Tag must follow the following pattern ^#[a-zA-Z]{2,16}$ ") String> hashtags) {
+			super();
+			this.tweetBody = tweetBody;
+			this.hashtags = hashtags;
+		}
+		
+		
 	    
 	    
 

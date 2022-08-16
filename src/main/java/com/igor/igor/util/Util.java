@@ -13,10 +13,12 @@ public class Util {
 	
 	private StringBuilder next= new StringBuilder();
 
+	
+	//Method for creating the nextPage URI
 	public URI uriFormater(HttpServletRequest request, Pageable paging, List<String> hashTag, List<String> username) {
 		 URI uri = null;
 		 
-		 next.append(request.getRequestURL().toString()); //popravi
+		 next.append(request.getRequestURL().toString());
 	
 		 if(request.getParameter("limit")!=null) {
 		 next.append("?limit="+paging.getPageSize()+"&");
