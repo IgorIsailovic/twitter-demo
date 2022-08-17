@@ -1,4 +1,4 @@
-package com.igor.igor.error;
+package com.twitter.error;
 
 
 public class Error {

@@ -1,4 +1,4 @@
-package com.igor.igor.error;
+package com.twitter.error;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
+
+import com.twitter.exceptions.TweetNotFoundException;
+import com.twitter.exceptions.UnauthorizedTweetDeletionException;
 
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,7 +39,7 @@ public class CustomControllerAdvice {
 
 			((ConstraintViolationException)ex).getConstraintViolations().forEach(cv -> errors.add(cv.getMessage()));
 
-			return new Error(HttpStatus.BAD_REQUEST.value(), 1, errors.get(0));
+			return new Error(HttpStatus.BAD_REQUEST.value(), 2, errors.get(0));
 		}
 		return new Error (HttpStatus.BAD_REQUEST.value(), 1, "Bad request");
 		}
@@ -54,16 +57,16 @@ public class CustomControllerAdvice {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Error handleTweetNotFoundException(TweetNotFoundException ex, WebRequest request) {
-	   return new Error(HttpStatus.NOT_FOUND.value(), 1,"Specified tweet does not exist!");
+	   return new Error(HttpStatus.NOT_FOUND.value(), 1, ex.getMessage());
 	    
 	}
 	
-	@ExceptionHandler(UnauthorizedTweetDeletionExceptiom.class)
+	@ExceptionHandler(UnauthorizedTweetDeletionException.class)
 	@ResponseStatus(code = HttpStatus.FORBIDDEN)
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Error handleUnauthorizedTweetDeletionExceptiom(UnauthorizedTweetDeletionExceptiom ex, WebRequest request) {
-	   return new Error(HttpStatus.FORBIDDEN.value(), 1,"Only allowed to delete own tweets!");
+	public Error handleUnauthorizedTweetDeletionExceptiom(UnauthorizedTweetDeletionException ex, WebRequest request) {
+	   return new Error(HttpStatus.FORBIDDEN.value(), 1, ex.getMessage());
 	    
 	}
 	

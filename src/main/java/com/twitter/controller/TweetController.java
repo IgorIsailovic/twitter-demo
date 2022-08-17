@@ -1,8 +1,6 @@
-package com.igor.igor.controller;
+package com.twitter.controller;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -10,7 +8,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,12 +27,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.igor.igor.error.UnauthorizedTweetDeletionExceptiom;
-import com.igor.igor.models.PostTweetReq;
-import com.igor.igor.models.TweetResp;
-import com.igor.igor.models.TweetsPageResp;
-import com.igor.igor.service.implementation.TweetRespServiceImpl;
-import com.igor.igor.util.Util;
+import com.twitter.models.PostTweetReq;
+import com.twitter.models.TweetResp;
+import com.twitter.models.TweetsPageResp;
+import com.twitter.service.TweetService;
+import com.twitter.util.Util;
 
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -44,8 +40,11 @@ import io.swagger.v3.oas.annotations.Operation;
 @RequestMapping("/v1/tweets")
 public class TweetController {
 
-	@Autowired
-	private TweetRespServiceImpl tweetService;
+	private TweetService tweetService;
+
+	public TweetController(TweetService tweetService) {
+		this.tweetService = tweetService;
+	}
 
 	@Operation(summary = "Post a tweet to the service")
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,8 +55,7 @@ public class TweetController {
 		tweet.setCreatedBy(xUsername);
 		tweet.setTweetBody(postTweetReq.getTweetBody());
 		tweet.setHashtags(postTweetReq.getHashtags());
-		tweetService.createTweet(tweet);
-		return tweet;
+		return tweetService.createTweet(tweet);
 	}
 
 	@Operation(summary = "Queries the tweets, returning a page of tweets that match the provided query params sorted by the time created. Multiple query params for hash tags and usernames could be specified. If that is the case, tweets that have at least one of the specified hash tags match the query. Same goes for username.")
@@ -99,12 +97,7 @@ public class TweetController {
 	public TweetResp deleteTweet(@PathVariable("tweetId") String id,
 			@RequestHeader(value = "X-Username", required = true) @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$", message = "X-username header must follow pattern: ^[a-zA-Z0-9_]{4,32}$") String xUsername) {
 
-		TweetResp tweet = tweetService.findById(id);
-		if (tweet.getCreatedBy().equals(xUsername)) {
-			tweetService.deleteTask(id);
-			return tweet;
-		} else
-			throw new UnauthorizedTweetDeletionExceptiom();
+		return tweetService.deleteTweet(id, xUsername);
 
 	}
 

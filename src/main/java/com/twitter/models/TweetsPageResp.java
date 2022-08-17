@@ -1,4 +1,4 @@
-package com.igor.igor.models;
+package com.twitter.models;
 
 import java.net.URI;
 import java.util.List;

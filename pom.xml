@@ -9,8 +9,8 @@
 		<version>2.7.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.igor</groupId>
-	<artifactId>igor</artifactId>
+	<groupId>com.twitter</groupId>
+	<artifactId>twitter</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>igor</name>
 	<description>Demo twitter</description>

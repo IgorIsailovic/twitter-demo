@@ -1,4 +1,4 @@
-package com.igor.igor.models;
+package com.twitter.models;
 
 import java.util.Date;
 import java.util.List;
@@ -44,12 +44,12 @@ public class TweetResp {
     
     
     @ElementCollection(fetch = FetchType.EAGER) 
-    @CollectionTable(name = "hash_tags", joinColumns = @JoinColumn(name = "tweet_id"), indexes = {		  @Index(name = "hashTagIndex", columnList = "hash_tags"),
+    @CollectionTable(name = "hash_tags", joinColumns = @JoinColumn(name = "tweet_id"), indexes = {@Index(name = "hashTagIndex", columnList = "hash_tags"),
 })
     @Column(name="hash_tags")
    // @Size(max=5, message = "Hashtag list must not be greater than 5!")
     private List</*@Pattern(regexp = "^#[a-zA-Z]{2,16}$", message="Each Hash Tag must follow the following pattern ^#[a-zA-Z]{2,16}$ ")*/ String> hashtags;
-    
+ 
    
    // @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$")
     @Column(name = "created_by")
