@@ -2,16 +2,22 @@ package com.twitter.service.implementation;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.twitter.exceptions.TweetNotFoundException;
 import com.twitter.exceptions.UnauthorizedTweetDeletionException;
+import com.twitter.models.PostTweetReq;
 import com.twitter.models.TweetResp;
+import com.twitter.models.TweetsPageResp;
 import com.twitter.repository.TweetRepository;
 import com.twitter.service.TweetService;
+import com.twitter.util.Util;
 
 @Service
 public class TweetServiceImpl implements TweetService {
@@ -24,8 +30,12 @@ public class TweetServiceImpl implements TweetService {
 
 
 	@Override
-	public TweetResp createTweet(TweetResp tweet) {
-	    	return tweetRepo.save(tweet);
+	public TweetResp createTweet(String xUsername, PostTweetReq postTweetReq) {
+		TweetResp tweet = new TweetResp();
+		tweet.setCreatedBy(xUsername);
+		tweet.setTweetBody(postTweetReq.getTweetBody());
+		tweet.setHashtags(postTweetReq.getHashtags());
+	    return tweetRepo.save(tweet);
 	
 	}
 
@@ -44,7 +54,31 @@ public class TweetServiceImpl implements TweetService {
 			throw new UnauthorizedTweetDeletionException("Only allowed to delete own tweets!");
 	}
 
+	@Override
+	public TweetsPageResp getTweets(int offset, int limit, List<String> hashTag, List<String> username, HttpServletRequest request  ) {
+		TweetsPageResp response = new TweetsPageResp();
+		Pageable paging = PageRequest.of(offset, limit, Sort.by("createdAt").descending());
+		Page<TweetResp> tweets;
+		Util util = new Util();
 
+		if (username != null && hashTag != null) {
+			tweets = tweetRepo.findByHashtagsInOrCreatedByIn(hashTag, username, paging);
+		} else if (hashTag != null) {
+			tweets = tweetRepo.findAllByHashtagsIn(hashTag, paging);
+		} else if (username != null) {
+			tweets = tweetRepo.findAllByCreatedByIn(username, paging);
+		} else
+			tweets = tweetRepo.findAll(paging);
+
+		if (tweets.isLast()) {
+			response = new TweetsPageResp(tweets.getContent());
+		} else {
+			response = new TweetsPageResp(tweets.getContent(), util.uriFormater(request, paging, hashTag, username));
+		}
+		return response;	
+	}
+	
+	/*
 	@Override
 	public Page<TweetResp> findAllByHashtagsIn(List<String> hashtags, Pageable pageable) {
 		return tweetRepo.findAllByHashtagsIn(hashtags, pageable);
@@ -60,9 +94,7 @@ public class TweetServiceImpl implements TweetService {
 			Pageable pageable) {
 		return tweetRepo.findByHashtagsInOrCreatedByIn(createdBy, hashtags, pageable);
 	}
-
-	
-	
+*/
 
 
 }

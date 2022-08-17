@@ -51,11 +51,8 @@ public class TweetController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public TweetResp createTweet(@Valid @RequestBody PostTweetReq postTweetReq,
 			@RequestHeader(value = "X-Username", required = true) @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$", message = "X-username header must follow pattern: ^[a-zA-Z0-9_]{4,32}$") String xUsername) {
-		TweetResp tweet = new TweetResp();
-		tweet.setCreatedBy(xUsername);
-		tweet.setTweetBody(postTweetReq.getTweetBody());
-		tweet.setHashtags(postTweetReq.getHashtags());
-		return tweetService.createTweet(tweet);
+		
+		return tweetService.createTweet(xUsername, postTweetReq);
 	}
 
 	@Operation(summary = "Queries the tweets, returning a page of tweets that match the provided query params sorted by the time created. Multiple query params for hash tags and usernames could be specified. If that is the case, tweets that have at least one of the specified hash tags match the query. Same goes for username.")
@@ -66,27 +63,8 @@ public class TweetController {
 			@RequestParam(defaultValue = "0") @Min(value = 0, message = "Offset parametar must be greater or equal to 0") int offset,
 			@RequestParam(defaultValue = "50") @Min(value = 1, message = "Limit param must be greater than 0") @Max(value = 100, message = "Limit param must not be greater than 100") int limit,
 			HttpServletRequest request) {
-
-		TweetsPageResp response = new TweetsPageResp();
-		Pageable paging = PageRequest.of(offset, limit, Sort.by("createdAt").descending());
-		Page<TweetResp> tweets;
-		Util util = new Util();
-
-		if (username != null && hashTag != null) {
-			tweets = tweetService.findByHashtagsInOrCreatedByIn(hashTag, username, paging);
-		} else if (hashTag != null) {
-			tweets = tweetService.findAllByHashtagsIn(hashTag, paging);
-		} else if (username != null) {
-			tweets = tweetService.findAllByCreatedByIn(username, paging);
-		} else
-			tweets = tweetService.findAll(paging);
-
-		if (tweets.isLast()) {
-			response = new TweetsPageResp(tweets.getContent());
-		} else {
-			response = new TweetsPageResp(tweets.getContent(), util.uriFormater(request, paging, hashTag, username));
-		}
-		return response;
+		
+		return tweetService.getTweets(offset, limit, hashTag, username, request);
 
 	}
 
