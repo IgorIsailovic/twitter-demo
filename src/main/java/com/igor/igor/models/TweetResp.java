@@ -37,9 +37,9 @@ public class TweetResp {
     @Column(name = "tweet_id",columnDefinition = "CHAR(32)")
     private String tweetId;
 
-    @NotNull(message="Tweet body must be specified!")
+    //@NotNull(message="Tweet body must be specified!")
     @Column(name = "tweet_body", columnDefinition = "text", nullable=false)
-    @Size(max=320, message = "Tweet body must not be greater than 320 characters!")
+    //@Size(max=320, message = "Tweet body must not be greater than 320 characters!")
     private String tweetBody;
     
     
@@ -47,11 +47,11 @@ public class TweetResp {
     @CollectionTable(name = "hash_tags", joinColumns = @JoinColumn(name = "tweet_id"), indexes = {		  @Index(name = "hashTagIndex", columnList = "hash_tags"),
 })
     @Column(name="hash_tags")
-    @Size(max=5, message = "Hashtag list must not be greater than 5!")
-    private List<@Pattern(regexp = "^#[a-zA-Z]{2,16}$", message="Each Hash Tag must follow the following pattern ^#[a-zA-Z]{2,16}$ ") String> hashtags;
+   // @Size(max=5, message = "Hashtag list must not be greater than 5!")
+    private List</*@Pattern(regexp = "^#[a-zA-Z]{2,16}$", message="Each Hash Tag must follow the following pattern ^#[a-zA-Z]{2,16}$ ")*/ String> hashtags;
     
    
-    @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$")
+   // @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$")
     @Column(name = "created_by")
     private String createdBy;
     

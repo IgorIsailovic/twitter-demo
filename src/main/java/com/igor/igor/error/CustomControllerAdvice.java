@@ -41,19 +41,6 @@ public class CustomControllerAdvice {
 		return new Error (HttpStatus.BAD_REQUEST.value(), 1, "Bad request");
 		}
 
-
-
-	/*@ExceptionHandler(ConstraintViolationException.class)
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
-	@ResponseBody
-	public Error constraintViolationException(ConstraintViolationException ex, WebRequest request) {
-		List<String> errors = new ArrayList<>();
-
-		ex.getConstraintViolations().forEach(cv -> errors.add(cv.getMessage()));
-
-		return new Error(HttpStatus.BAD_REQUEST.value(), 1, errors.get(0));
-	}
-*/
 	@ExceptionHandler(MissingRequestHeaderException.class)
 	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)

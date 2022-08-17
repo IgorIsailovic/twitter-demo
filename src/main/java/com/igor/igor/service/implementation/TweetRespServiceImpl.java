@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 
 import com.igor.igor.error.TweetNotFoundException;
 import com.igor.igor.models.TweetResp;
-import com.igor.igor.repository.TweetRespRepository;
-import com.igor.igor.service.TweetRespService;
+import com.igor.igor.repository.TweetRepository;
+import com.igor.igor.service.TweetService;
 
 @Service
-public class TweetRespServiceImpl implements TweetRespService {
+public class TweetRespServiceImpl implements TweetService {
 
 	@Autowired
-	TweetRespRepository tweetRepo;
+	TweetRepository tweetRepo;
 	
 	@Override
 	public List<TweetResp> findAll() {

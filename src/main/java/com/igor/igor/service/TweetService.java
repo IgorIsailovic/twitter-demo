@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import com.igor.igor.models.TweetResp;
 
 
-public interface TweetRespService {
+public interface TweetService {
 
 
 	List<TweetResp> findAll();

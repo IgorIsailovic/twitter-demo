@@ -33,8 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.igor.igor.error.UnauthorizedTweetDeletionExceptiom;
 import com.igor.igor.models.PostTweetReq;
 import com.igor.igor.models.TweetResp;
+import com.igor.igor.models.TweetsPageResp;
 import com.igor.igor.service.implementation.TweetRespServiceImpl;
-import com.igor.igor.util.TweetsPageResp;
 import com.igor.igor.util.Util;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +42,7 @@ import io.swagger.v3.oas.annotations.Operation;
 @Validated
 @RestController
 @RequestMapping("/v1/tweets")
-public class TweetRespController {
+public class TweetController {
 
 	@Autowired
 	private TweetRespServiceImpl tweetService;

@@ -1,10 +1,9 @@
-package com.igor.igor.util;
+package com.igor.igor.models;
 
 import java.net.URI;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.igor.igor.models.TweetResp;
 
 public class TweetsPageResp {
 	

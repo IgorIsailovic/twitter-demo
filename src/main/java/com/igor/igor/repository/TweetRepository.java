@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.igor.igor.models.TweetResp;
 
-public interface TweetRespRepository extends JpaRepository<TweetResp, String> {
+public interface TweetRepository extends JpaRepository<TweetResp, String> {
 	Page<TweetResp> findAll(Pageable pageable);
 	Page<TweetResp> findAllByHashtagsIn(List<String> hashtags, Pageable pageable);
 	Page<TweetResp> findAllByCreatedByIn(List<String> hashtag, Pageable pageable);
