@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import com.twitter.enums.BadRequestCodes;
+import com.twitter.enums.ForbiddenCodes;
+import com.twitter.enums.NotFoundCodes;
+import com.twitter.enums.UnauthorizedCodes;
 import com.twitter.exceptions.TweetNotFoundException;
 import com.twitter.exceptions.UnauthorizedTweetDeletionException;
-
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 
 @ControllerAdvice
@@ -32,16 +33,16 @@ public class CustomControllerAdvice {
 	@ResponseBody
 	public Error handleMethodArgumentNotValidException(Exception ex, WebRequest request) {
 		if(ex instanceof MethodArgumentNotValidException) {
-		return new Error(HttpStatus.BAD_REQUEST.value(), 6, ((MethodArgumentNotValidException) ex).getFieldError().getDefaultMessage());
+		return new Error(HttpStatus.BAD_REQUEST.value(), BadRequestCodes.METHOD_ARHUMENT_NOT_VALID.getValue(), ((MethodArgumentNotValidException) ex).getFieldError().getDefaultMessage());
 		}
 		else if (ex instanceof ConstraintViolationException) {
 			List<String> errors = new ArrayList<>();
 
 			((ConstraintViolationException)ex).getConstraintViolations().forEach(cv -> errors.add(cv.getMessage()));
 
-			return new Error(HttpStatus.BAD_REQUEST.value(), 2, errors.get(0));
+			return new Error(HttpStatus.BAD_REQUEST.value(), BadRequestCodes.CONSTRAINT_VIOLATION.getValue(), errors.get(0));
 		}
-		return new Error (HttpStatus.BAD_REQUEST.value(), 1, "Bad request");
+		return new Error (HttpStatus.BAD_REQUEST.value(), BadRequestCodes.DEFAULT.getValue(), "Bad request");
 		}
 
 	@ExceptionHandler(MissingRequestHeaderException.class)
@@ -49,7 +50,7 @@ public class CustomControllerAdvice {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Error handleMissingRequestHeaderException(MissingRequestHeaderException ex, WebRequest request) {
-		return new Error(HttpStatus.UNAUTHORIZED.value(), 1, ex.getMessage());
+		return new Error(HttpStatus.UNAUTHORIZED.value(), UnauthorizedCodes.MISSING_REQUEST_HEADER.getValue(), ex.getMessage());
 	}
 
 	@ExceptionHandler(TweetNotFoundException.class)
@@ -57,7 +58,7 @@ public class CustomControllerAdvice {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Error handleTweetNotFoundException(TweetNotFoundException ex, WebRequest request) {
-	   return new Error(HttpStatus.NOT_FOUND.value(), 1, ex.getMessage());
+	   return new Error(HttpStatus.NOT_FOUND.value(), NotFoundCodes.TWEET_NOT_FOUND.getValue(), ex.getMessage());
 	    
 	}
 	
@@ -66,7 +67,7 @@ public class CustomControllerAdvice {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Error handleUnauthorizedTweetDeletionExceptiom(UnauthorizedTweetDeletionException ex, WebRequest request) {
-	   return new Error(HttpStatus.FORBIDDEN.value(), 1, ex.getMessage());
+	   return new Error(HttpStatus.FORBIDDEN.value(), ForbiddenCodes.UNAUTHORIZED_TWEET_DELETION.getValue(), ex.getMessage());
 	    
 	}
 	

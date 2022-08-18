@@ -22,12 +22,4 @@ public interface TweetService {
 	
 	public TweetsPageResp getTweets(int offset, int limit, List<String> hashTag, List<String> username, HttpServletRequest request );
 
-	/*
-	Page<TweetResp> findAllByHashtagsIn(List<String> hashtags, Pageable pageable);
-	
-	Page<TweetResp> findAllByCreatedByIn(List<String> createdBy, Pageable pageable);
-	
-	Page<TweetResp> findByHashtagsInOrCreatedByIn(List<String> createdBy,List<String> hashtags, Pageable pageable);
-	*/
-
 }

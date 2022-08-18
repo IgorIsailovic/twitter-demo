@@ -8,10 +8,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -31,7 +27,6 @@ import com.twitter.models.PostTweetReq;
 import com.twitter.models.TweetResp;
 import com.twitter.models.TweetsPageResp;
 import com.twitter.service.TweetService;
-import com.twitter.util.Util;
 
 import io.swagger.v3.oas.annotations.Operation;
 

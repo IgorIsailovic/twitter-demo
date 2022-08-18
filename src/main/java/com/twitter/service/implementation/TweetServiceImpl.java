@@ -78,23 +78,6 @@ public class TweetServiceImpl implements TweetService {
 		return response;	
 	}
 	
-	/*
-	@Override
-	public Page<TweetResp> findAllByHashtagsIn(List<String> hashtags, Pageable pageable) {
-		return tweetRepo.findAllByHashtagsIn(hashtags, pageable);
-	}
-
-	@Override
-	public Page<TweetResp> findAllByCreatedByIn(List<String> createdBy, Pageable pageable) {
-		return tweetRepo.findAllByCreatedByIn(createdBy, pageable);
-	}
-
-	@Override
-	public Page<TweetResp> findByHashtagsInOrCreatedByIn(List<String> createdBy, List<String> hashtags,
-			Pageable pageable) {
-		return tweetRepo.findByHashtagsInOrCreatedByIn(createdBy, hashtags, pageable);
-	}
-*/
 
 
 }

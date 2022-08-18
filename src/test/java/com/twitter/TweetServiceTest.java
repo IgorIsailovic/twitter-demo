@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -67,6 +68,7 @@ public class TweetServiceTest {
 	
 
 	private List<TweetResp> tweets = Arrays.asList(tweet1, tweet2, tweet3);
+	
 	
 	
 	@Test
@@ -165,12 +167,15 @@ public class TweetServiceTest {
 		// given
 
 		Page<TweetResp> page = new PageImpl<>(tweets);
+		
+		HttpServletRequest request = mock(HttpServletRequest.class);
+
 
 		// when
 
 		when(tweetRepository.findAll(paging)).thenReturn(page);
 
-		TweetsPageResp tweetPageResponse = tweetService.getTweets(0, limit, null, null, null);
+		TweetsPageResp tweetPageResponse = tweetService.getTweets(0, limit, null, null, request);
 
 		// then
 
@@ -187,12 +192,15 @@ public class TweetServiceTest {
 		// given
 
 		Page<TweetResp> page = new PageImpl<>(tweets);
+		
+		HttpServletRequest request = mock(HttpServletRequest.class);
+
 
 		// when
 
 		when(tweetRepository.findAllByHashtagsIn(hashtagsList, paging)).thenReturn(page);
 
-		TweetsPageResp tweetPageResponse = tweetService.getTweets(0, limit, hashtagsList, null, null);
+		TweetsPageResp tweetPageResponse = tweetService.getTweets(0, limit, hashtagsList, null, request);
 
 		// then
 
@@ -209,12 +217,15 @@ public class TweetServiceTest {
 		// given
 
 		Page<TweetResp> page = new PageImpl<>(tweets);
+		
+		HttpServletRequest request = mock(HttpServletRequest.class);
+
 
 		// when
 
 		when(tweetRepository.findAllByCreatedByIn(usernames, paging)).thenReturn(page);
 
-		TweetsPageResp tweetPageResponse = tweetService.getTweets(0, limit, null, usernames, null);
+		TweetsPageResp tweetPageResponse = tweetService.getTweets(0, limit, null, usernames, request);
 
 		// then
 
@@ -231,12 +242,15 @@ public class TweetServiceTest {
 		// given
 
 		Page<TweetResp> page = new PageImpl<>(tweets);
+		
+		HttpServletRequest request = mock(HttpServletRequest.class);
+
 
 		// when
 
 		when(tweetRepository.findByHashtagsInOrCreatedByIn(hashtagsList, usernames, paging)).thenReturn(page);
 
-		TweetsPageResp tweetPageResponse = tweetService.getTweets(0, limit, hashtagsList, usernames, null);
+		TweetsPageResp tweetPageResponse = tweetService.getTweets(0, limit, hashtagsList, usernames, request);
 
 		// then
 
@@ -246,4 +260,29 @@ public class TweetServiceTest {
 		verify(tweetRepository, times(1)).findByHashtagsInOrCreatedByIn(hashtagsList, usernames, paging);
 
 	}
+	
+	/*@Test
+	public void getTweetsWhenHasNext() {
+
+		// given
+
+		Page<TweetResp> page = new PageImpl<>(tweets);
+		
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		
+		String url = "http://localhost:8090/v1/tweets";
+
+
+		// when
+
+		when(tweetRepository.findByHashtagsInOrCreatedByIn(hashtagsList, usernames, paging)).thenReturn(page);
+
+		when(request.getRequestURL().toString()).thenReturn(url);
+		
+		TweetsPageResp tweetPageResponse = tweetService.getTweets(0, limit, hashtagsList, usernames, request);
+
+		// then
+
+
+	}*/
 }
