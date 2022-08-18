@@ -20,6 +20,6 @@ public interface TweetService {
    
 	TweetResp deleteTweet(String id, String xUsername);
 	
-	public TweetsPageResp getTweets(int offset, int limit, List<String> hashTag, List<String> username, HttpServletRequest request );
+	public TweetsPageResp getTweets(int offset, int limit, List<String> hashtags, List<String> usernames, HttpServletRequest request );
 
 }

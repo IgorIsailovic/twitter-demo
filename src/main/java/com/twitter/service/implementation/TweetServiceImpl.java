@@ -23,11 +23,10 @@ import com.twitter.util.Util;
 public class TweetServiceImpl implements TweetService {
 
 	private TweetRepository tweetRepo;
-	
+
 	public TweetServiceImpl(TweetRepository tweetRepo) {
 		this.tweetRepo = tweetRepo;
 	}
-
 
 	@Override
 	public TweetResp createTweet(String xUsername, PostTweetReq postTweetReq) {
@@ -35,8 +34,8 @@ public class TweetServiceImpl implements TweetService {
 		tweet.setCreatedBy(xUsername);
 		tweet.setTweetBody(postTweetReq.getTweetBody());
 		tweet.setHashtags(postTweetReq.getHashtags());
-	    return tweetRepo.save(tweet);
-	
+		return tweetRepo.save(tweet);
+
 	}
 
 	@Override
@@ -46,7 +45,9 @@ public class TweetServiceImpl implements TweetService {
 
 	@Override
 	public TweetResp deleteTweet(String id, String xUsername) {
-		TweetResp tweet = tweetRepo.findById(id).orElseThrow(() -> new TweetNotFoundException("Specified tweet does not exist!"));// Throws TweetNotFoundException on service level
+		TweetResp tweet = tweetRepo.findById(id)
+				.orElseThrow(() -> new TweetNotFoundException("Specified tweet does not exist!"));
+
 		if (tweet.getCreatedBy().equals(xUsername)) {
 			tweetRepo.deleteById(id);
 			return tweet;
@@ -55,29 +56,28 @@ public class TweetServiceImpl implements TweetService {
 	}
 
 	@Override
-	public TweetsPageResp getTweets(int offset, int limit, List<String> hashTag, List<String> username, HttpServletRequest request  ) {
+	public TweetsPageResp getTweets(int offset, int limit, List<String> hashtags, List<String> usernames,
+			HttpServletRequest request) {
 		TweetsPageResp response = new TweetsPageResp();
 		Pageable paging = PageRequest.of(offset, limit, Sort.by("createdAt").descending());
 		Page<TweetResp> tweets;
 		Util util = new Util();
 
-		if (username != null && hashTag != null) {
-			tweets = tweetRepo.findByHashtagsInOrCreatedByIn(hashTag, username, paging);
-		} else if (hashTag != null) {
-			tweets = tweetRepo.findAllByHashtagsIn(hashTag, paging);
-		} else if (username != null) {
-			tweets = tweetRepo.findAllByCreatedByIn(username, paging);
+		if (usernames != null && hashtags != null) {
+			tweets = tweetRepo.findByHashtagsInOrCreatedByIn(hashtags, usernames, paging);
+		} else if (hashtags != null) {
+			tweets = tweetRepo.findAllByHashtagsIn(hashtags, paging);
+		} else if (usernames != null) {
+			tweets = tweetRepo.findAllByCreatedByIn(usernames, paging);
 		} else
 			tweets = tweetRepo.findAll(paging);
 
 		if (tweets.isLast()) {
 			response = new TweetsPageResp(tweets.getContent());
 		} else {
-			response = new TweetsPageResp(tweets.getContent(), util.uriFormater(request, paging, hashTag, username));
+			response = new TweetsPageResp(tweets.getContent(), util.uriFormater(request, paging, hashtags, usernames));
 		}
-		return response;	
+		return response;
 	}
-	
-
 
 }

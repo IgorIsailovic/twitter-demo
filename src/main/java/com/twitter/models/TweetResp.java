@@ -1,6 +1,6 @@
 package com.twitter.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CollectionTable;
@@ -14,9 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Index;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+//import javax.validation.constraints.NotNull;
+//import javax.validation.constraints.Pattern;
+//import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -56,7 +56,7 @@ public class TweetResp {
     private String createdBy;
     
     @Column(name = "created_at")
-    private String createdAt = new Date().toString();
+    private String createdAt = LocalDateTime.now().toString();
     
 
 	public String getTweetId() {
@@ -126,14 +126,4 @@ public class TweetResp {
 		return "Tweet [tweetId=" + tweetId + ", tweetBody=" + tweetBody + ", hashtags=" + hashtags + ", createdBy="
 				+ createdBy + ", createdAt=" + createdAt + "]";
 	}
-
-
-
-	
-
-	
-
-    
-    
-	
 }

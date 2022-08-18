@@ -50,25 +50,28 @@ public class TweetController {
 		return tweetService.createTweet(xUsername, postTweetReq);
 	}
 
-	@Operation(summary = "Queries the tweets, returning a page of tweets that match the provided query params sorted by the time created. Multiple query params for hash tags and usernames could be specified. If that is the case, tweets that have at least one of the specified hash tags match the query. Same goes for username.")
+	@Operation(summary = "Queries the tweets, returning a page of tweets that match the provided query params sorted by the time created. " + 
+	"Multiple query params for hash tags and usernames could be specified. If that is the case, tweets that have at least one of the specified hash tags match the query. Same goes for username.")
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public TweetsPageResp getAllUsers(
-			@RequestHeader(value = "X-Username", required = true) @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$", message = "X-username header must follow pattern: ^[a-zA-Z0-9_]{4,32}$") String xUsername,
-			@RequestParam(required = false) List<String> hashTag, @RequestParam(required = false) List<String> username,
-			@RequestParam(defaultValue = "0") @Min(value = 0, message = "Offset parametar must be greater or equal to 0") int offset,
+			@RequestHeader(value = "X-Username", required = true) @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$", message = "X-username header must follow the pattern: ^[a-zA-Z0-9_]{4,32}$") String xUsername,
+			@RequestParam(required = false) List<String> hashTag, 
+			@RequestParam(required = false) List<String> username,
 			@RequestParam(defaultValue = "50") @Min(value = 1, message = "Limit param must be greater than 0") @Max(value = 100, message = "Limit param must not be greater than 100") int limit,
+			@RequestParam(defaultValue = "0") @Min(value = 0, message = "Offset parametar must be greater or equal to 0") int offset,
 			HttpServletRequest request) {
 		
 		return tweetService.getTweets(offset, limit, hashTag, username, request);
 
 	}
 
-	@Operation(summary = "Deletes a tweet from the system. User can only"
-			+ " delete his own tweets (username must match).")
+	@Operation(summary = "Deletes a tweet from the system. User can only "+ 
+	"delete his own tweets (username must match).")
 	@DeleteMapping(value = "/{tweetId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public TweetResp deleteTweet(@PathVariable("tweetId") String id,
-			@RequestHeader(value = "X-Username", required = true) @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$", message = "X-username header must follow pattern: ^[a-zA-Z0-9_]{4,32}$") String xUsername) {
+	public TweetResp deleteTweet(
+			@RequestHeader(value = "X-Username", required = true) @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$", message = "X-username header must follow pattern: ^[a-zA-Z0-9_]{4,32}$") String xUsername,
+			@PathVariable("tweetId") String id) {
 
 		return tweetService.deleteTweet(id, xUsername);
 

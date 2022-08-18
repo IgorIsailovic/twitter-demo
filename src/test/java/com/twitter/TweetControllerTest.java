@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.twitter.exceptions.TweetNotFoundException;
 import com.twitter.models.PostTweetReq;
 import com.twitter.models.TweetResp;
 import com.twitter.service.implementation.TweetServiceImpl;
@@ -95,11 +96,12 @@ public class TweetControllerTest {
 
 		MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.delete("/v1/tweets/" + tweet2.getTweetId())
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-				.header("X-Username", "sbg_user1").content(this.mapper.writeValueAsString(tweet2)
+				.header("X-Username", "sbg_user1").content(this.mapper.writeValueAsString(tweet1)
 
 				);
 
 		mockMvc.perform(mockRequest).andExpect(status().isOk());
 
 	}
+	
 }
