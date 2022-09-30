@@ -1,9 +1,9 @@
-# Homework - Igor Isailovic
+﻿# Twitter demo
 
 ## Clone the repo
 
 ```
-git clone https://gitlab.com/sb-homework/homework-igor-isailovic.git
+git clone https://github.com/IgorIsailovic/twitter-demo.git
 ```
 
 ## Initialize the database
@@ -36,3 +36,4 @@ Url for the conection to the database should be:
 where the host is the machine on which the Postgres container is running. If it’s on the same machine as the application localhost can be used:
 
     spring.datasource.url=jdbc:postgresql://localhost:5432/tweets
+
