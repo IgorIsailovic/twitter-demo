@@ -52,7 +52,7 @@ public class TweetServiceImpl implements TweetService {
 			tweetRepo.deleteById(id);
 			return tweet;
 		} else
-			throw new UnauthorizedTweetDeletionException("Only allowed to delete own tweets!");
+			throw new UnauthorizedTweetDeletionException("Users are only allowed to delete own tweets!");
 	}
 
 	@Override
@@ -75,7 +75,8 @@ public class TweetServiceImpl implements TweetService {
 		if (tweets.isLast()) {
 			response = new TweetsPageResp(tweets.getContent());
 		} else {
-			response = new TweetsPageResp(tweets.getContent(), util.uriFormater(request, paging, hashtags, usernames));
+			response = new TweetsPageResp(tweets.getContent(),
+					util.createNextPageUri(request, paging, hashtags, usernames));
 		}
 		return response;
 	}

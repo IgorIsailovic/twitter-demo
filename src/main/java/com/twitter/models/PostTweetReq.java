@@ -13,7 +13,7 @@ public class PostTweetReq {
 	private String tweetBody;
 
 	@Size(max = 5, message = "No more than 5 hashtags can be specified!")
-	private List<@Pattern(regexp = "^#[a-zA-Z]{2,16}$", message = "Each hashtag must follow the following pattern ^#[a-zA-Z]{2,16}$ ") String> hashtags;
+	private List<@Pattern(regexp = "^#[a-zA-Z]{2,16}$", message = "Each hashtag must follow the following pattern ^#[a-zA-Z]{2,16}$") String> hashtags;
 
 	public String getTweetBody() {
 		return tweetBody;

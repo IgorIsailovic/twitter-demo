@@ -14,12 +14,12 @@ import com.twitter.models.TweetsPageResp;
 
 public interface TweetService {
 	
-	public TweetResp createTweet(String xUsername, PostTweetReq postTweetReq);
+	TweetResp createTweet(String xUsername, PostTweetReq postTweetReq);
 	
     Page<TweetResp> findAll(Pageable pageable);
    
 	TweetResp deleteTweet(String id, String xUsername);
 	
-	public TweetsPageResp getTweets(int offset, int limit, List<String> hashtags, List<String> usernames, HttpServletRequest request );
+	TweetsPageResp getTweets(int offset, int limit, List<String> hashtags, List<String> usernames, HttpServletRequest request );
 
 }

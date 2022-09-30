@@ -57,8 +57,8 @@ public class TweetController {
 			@RequestHeader(value = "X-Username", required = true) @Pattern(regexp = "^[a-zA-Z0-9_]{4,32}$", message = "X-username header must follow the pattern: ^[a-zA-Z0-9_]{4,32}$") String xUsername,
 			@RequestParam(required = false) List<String> hashTag, 
 			@RequestParam(required = false) List<String> username,
-			@RequestParam(defaultValue = "50") @Min(value = 1, message = "Limit param must be greater than 0") @Max(value = 100, message = "Limit param must not be greater than 100") int limit,
-			@RequestParam(defaultValue = "0") @Min(value = 0, message = "Offset parametar must be greater or equal to 0") int offset,
+			@RequestParam(defaultValue = "50") @Min(value = 1, message = "Limit paramameter must be greater than 0") @Max(value = 100, message = "Limit parameter must not be greater than 100") int limit,
+			@RequestParam(defaultValue = "0") @Min(value = 0, message = "Offset parameter must be greater or equal to 0") int offset,
 			HttpServletRequest request) {
 		
 		return tweetService.getTweets(offset, limit, hashTag, username, request);

@@ -1,0 +1,234 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8090
+    description: Generated server url
+paths:
+  /v1/tweets:
+    get:
+      tags:
+        - tweet-controller
+      summary: Queries the tweets, returning a page of tweets that match the provided query params sorted by the time created. Multiple query params for hash tags and usernames could be specified. If that is the case, tweets that have at least one of the specified hash tags match the query. Same goes for username.
+      operationId: getAllUsers
+      parameters:
+        - name: X-Username
+          in: header
+          required: true
+          schema:
+            pattern: ^[a-zA-Z0-9_]{4,32}$
+            type: string
+        - name: hashTag
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: username
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            maximum: 100
+            minimum: 1
+            type: integer
+            format: int32
+            default: 50
+        - name: offset
+          in: query
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            default: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TweetsPageResp'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - tweet-controller
+      summary: Post a tweet to the service
+      operationId: createTweet
+      parameters:
+        - name: X-Username
+          in: header
+          required: true
+          schema:
+            pattern: ^[a-zA-Z0-9_]{4,32}$
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostTweetReq'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TweetResp'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /v1/tweets/{tweetId}:
+    delete:
+      tags:
+        - tweet-controller
+      summary: Deletes a tweet from the system. User can only delete his own tweets (username must match).
+      operationId: deleteTweet
+      parameters:
+        - name: X-Username
+          in: header
+          required: true
+          schema:
+            pattern: ^[a-zA-Z0-9_]{4,32}$
+            type: string
+        - name: tweetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TweetResp'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        httpCode:
+          type: integer
+          format: int32
+        errorCode:
+          type: integer
+          format: int32
+        message:
+          type: string
+    PostTweetReq:
+      required:
+        - tweetBody
+      type: object
+      properties:
+        tweetBody:
+          maxLength: 320
+          minLength: 0
+          type: string
+        hashtags:
+          maxItems: 5
+          minItems: 0
+          type: array
+          items:
+            type: string
+    TweetResp:
+      type: object
+      properties:
+        tweetId:
+          type: string
+        tweetBody:
+          type: string
+        hashtags:
+          type: array
+          items:
+            type: string
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+    TweetsPageResp:
+      type: object
+      properties:
+        tweets:
+          type: array
+          items:
+            $ref: '#/components/schemas/TweetResp'
+        nextPage:
+          type: string
+          format: uri

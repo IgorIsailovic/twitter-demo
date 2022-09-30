@@ -45,32 +45,25 @@ public class TweetServiceTest {
 	TweetRepository tweetRepository = mock(TweetRepository.class);
 
 	TweetService tweetService = new TweetServiceImpl(tweetRepository);
-	
-	private  String id = UUID.randomUUID().toString();
+
+	private String id = UUID.randomUUID().toString();
 	private String xUsername = "X-username";
 	private String body = "Body test";
-		
+
 	private List<String> hashtagsList = Arrays.asList("#testA", "#testB", "#testC");
 
-	private List<String> usernames = Arrays.asList("xUsername","xUsername1","xUsername2");
+	private List<String> usernames = Arrays.asList("xUsername", "xUsername1", "xUsername2");
 
 	private int limit = 3;
 
-	
 	private Pageable paging = PageRequest.of(0, 3, Sort.by("createdAt").descending());
 
-	private TweetResp tweet1 = new TweetResp(id, body, hashtagsList, xUsername,
-			"Mon Aug 15 11:27:14 CEST 2022");
-	private TweetResp tweet2 = new TweetResp(id, body, hashtagsList, xUsername,
-			"Mon Aug 15 11:27:15 CEST 2022");
-	private TweetResp tweet3 = new TweetResp(id, body, hashtagsList, xUsername,
-			"Mon Aug 15 11:27:16 CEST 2022");
-	
+	private TweetResp tweet1 = new TweetResp(id, body, hashtagsList, xUsername, "Mon Aug 15 11:27:14 CEST 2022");
+	private TweetResp tweet2 = new TweetResp(id, body, hashtagsList, xUsername, "Mon Aug 15 11:27:15 CEST 2022");
+	private TweetResp tweet3 = new TweetResp(id, body, hashtagsList, xUsername, "Mon Aug 15 11:27:16 CEST 2022");
 
 	private List<TweetResp> tweets = Arrays.asList(tweet1, tweet2, tweet3);
-	
-	
-	
+
 	@Test
 	public void createTweetSuccess() {
 
@@ -97,7 +90,6 @@ public class TweetServiceTest {
 
 		// given
 
-
 		// when
 
 		when(tweetRepository.findById(id)).thenReturn(Optional.of(tweet1));
@@ -122,8 +114,8 @@ public class TweetServiceTest {
 	public void deleteTweetThrowsUnauthorizedTweetDeletionException() {
 
 		// given
-		
-		String exceptionMessage = "Only allowed to delete own tweets!";
+
+		String exceptionMessage = "Users are only allowed to delete own tweets!";
 
 		// when
 		when(tweetRepository.findById(id)).thenReturn(Optional.of(tweet1));
@@ -145,7 +137,7 @@ public class TweetServiceTest {
 		// given
 
 		String exceptionMessage = "Specified tweet does not exist!";
-		
+
 		// when
 		when(tweetRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -167,9 +159,8 @@ public class TweetServiceTest {
 		// given
 
 		Page<TweetResp> page = new PageImpl<>(tweets);
-		
-		HttpServletRequest request = mock(HttpServletRequest.class);
 
+		HttpServletRequest request = mock(HttpServletRequest.class);
 
 		// when
 
@@ -179,22 +170,21 @@ public class TweetServiceTest {
 
 		// then
 
-		 assertEquals(tweetPageResponse.getTweets().size(), tweets.size() );
-		 assertTrue(tweetPageResponse.getTweets().size() <= limit);
+		assertEquals(tweetPageResponse.getTweets().size(), tweets.size());
+		assertTrue(tweetPageResponse.getTweets().size() <= limit);
 
 		verify(tweetRepository, times(1)).findAll(paging);
 
 	}
-	
+
 	@Test
 	public void getTweetsWhenHashTagIsNotNull() {
 
 		// given
 
 		Page<TweetResp> page = new PageImpl<>(tweets);
-		
-		HttpServletRequest request = mock(HttpServletRequest.class);
 
+		HttpServletRequest request = mock(HttpServletRequest.class);
 
 		// when
 
@@ -204,8 +194,8 @@ public class TweetServiceTest {
 
 		// then
 
-		 assertEquals(tweetPageResponse.getTweets().size(), tweets.size() );
-		 assertTrue(tweetPageResponse.getTweets().size() <= limit);
+		assertEquals(tweetPageResponse.getTweets().size(), tweets.size());
+		assertTrue(tweetPageResponse.getTweets().size() <= limit);
 
 		verify(tweetRepository, times(1)).findAllByHashtagsIn(hashtagsList, paging);
 
@@ -217,9 +207,8 @@ public class TweetServiceTest {
 		// given
 
 		Page<TweetResp> page = new PageImpl<>(tweets);
-		
-		HttpServletRequest request = mock(HttpServletRequest.class);
 
+		HttpServletRequest request = mock(HttpServletRequest.class);
 
 		// when
 
@@ -229,22 +218,21 @@ public class TweetServiceTest {
 
 		// then
 
-		 assertEquals(tweetPageResponse.getTweets().size(), tweets.size() );
-		 assertTrue(tweetPageResponse.getTweets().size() <= limit);
-		
+		assertEquals(tweetPageResponse.getTweets().size(), tweets.size());
+		assertTrue(tweetPageResponse.getTweets().size() <= limit);
+
 		verify(tweetRepository, times(1)).findAllByCreatedByIn(usernames, paging);
 
 	}
-	
+
 	@Test
 	public void getTweetsWhenCreatedByAndHashtagAreNotNull() {
 
 		// given
 
 		Page<TweetResp> page = new PageImpl<>(tweets);
-		
-		HttpServletRequest request = mock(HttpServletRequest.class);
 
+		HttpServletRequest request = mock(HttpServletRequest.class);
 
 		// when
 
@@ -254,35 +242,11 @@ public class TweetServiceTest {
 
 		// then
 
-		 assertEquals(tweetPageResponse.getTweets().size(), tweets.size() );
-		 assertTrue(tweetPageResponse.getTweets().size() <= limit);
-		
+		assertEquals(tweetPageResponse.getTweets().size(), tweets.size());
+		assertTrue(tweetPageResponse.getTweets().size() <= limit);
+
 		verify(tweetRepository, times(1)).findByHashtagsInOrCreatedByIn(hashtagsList, usernames, paging);
 
 	}
-	
-	/*@Test
-	public void getTweetsWhenHasNext() {
 
-		// given
-
-		Page<TweetResp> page = new PageImpl<>(tweets);
-		
-		HttpServletRequest request = mock(HttpServletRequest.class);
-		
-		String url = "http://localhost:8090/v1/tweets";
-
-
-		// when
-
-		when(tweetRepository.findByHashtagsInOrCreatedByIn(hashtagsList, usernames, paging)).thenReturn(page);
-
-		when(request.getRequestURL().toString()).thenReturn(url);
-		
-		TweetsPageResp tweetPageResponse = tweetService.getTweets(0, limit, hashtagsList, usernames, request);
-
-		// then
-
-
-	}*/
 }

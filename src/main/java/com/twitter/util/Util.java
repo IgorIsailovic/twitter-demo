@@ -13,7 +13,7 @@ public class Util {
 	private StringBuilder next = new StringBuilder();
 
 	// Method for creating the nextPage URI
-	public URI uriFormater(HttpServletRequest request, Pageable paging, List<String> hashTag, List<String> username) {
+	public URI createNextPageUri(HttpServletRequest request, Pageable paging, List<String> hashTag, List<String> username) {
 		URI uri = null;
 
 		next.append(request.getRequestURL().toString());
